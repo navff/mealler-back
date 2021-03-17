@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using web.api.App.Common;
 using web.api.App.Recipes;
 using web.api.DataAccess;
 
@@ -15,8 +16,13 @@ namespace web.api.Helpings
     [ExcludeFromCodeCoverage]
     public static class DiMapper
     {
-        public static void Map(IServiceCollection services, bool testing = false)
+        public static void Map(IServiceCollection services, IConfiguration configuration, bool testing = false)
         {
+            // CONFIGURATION
+            if (testing) configuration = ConfigHelper.GetIConfigurationRoot(Directory.GetCurrentDirectory());
+            services.AddSingleton(configuration);
+            var authConfig = configuration.GetSection("Auth").Get<AuthConfig>();
+
             // SERVICES
             services.AddSwaggerGen(c =>
             {
@@ -28,9 +34,15 @@ namespace web.api.Helpings
             });
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
-            // CONFIGURATION
-            var configuration = ConfigHelper.GetIConfigurationRoot(Directory.GetCurrentDirectory());
-            services.AddSingleton<IConfiguration>(configuration);
+            // AUTH
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = authConfig.Google.ClientId;
+                    options.ClientSecret = authConfig.Google.ClientSecret;
+                });
+
             // Register DbContext
             AppDbContext.Register(services);
 

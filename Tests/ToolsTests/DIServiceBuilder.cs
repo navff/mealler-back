@@ -25,7 +25,7 @@ namespace Tests.ToolsTests
         private IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureServices(services => { DiMapper.Map(services); });
+                .ConfigureServices(services => { DiMapper.Map(services, null, true); });
         }
     }
 }

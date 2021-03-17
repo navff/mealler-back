@@ -21,7 +21,7 @@ namespace web.api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            DiMapper.Map(services);
+            DiMapper.Map(services, Configuration);
             services.AddMvcCore().SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .ConfigureApiBehaviorOptions(options => { options.SuppressInferBindingSourcesForParameters = true; });
         }

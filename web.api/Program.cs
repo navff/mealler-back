@@ -25,7 +25,11 @@ namespace web.api
                         .UseUrls("http://*:" + port)
                         .UseContentRoot(Directory.GetCurrentDirectory())
                         .UseConfiguration(config);
-                }).UseDefaultServiceProvider(options => options.ValidateScopes = false);
+                }).UseDefaultServiceProvider(options => options.ValidateScopes = false)
+                .ConfigureAppConfiguration((hostContext, builder) =>
+                {
+                    if (hostContext.HostingEnvironment.IsDevelopment()) builder.AddUserSecrets<Program>();
+                });
         }
     }
 }
