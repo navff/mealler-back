@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Common.Config;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -36,7 +37,11 @@ namespace web.api.Helpings
 
             // AUTH
 
-            services.AddAuthentication()
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(options => { options.LoginPath = "/user/google-login"; })
                 .AddGoogle(options =>
                 {
                     options.ClientId = authConfig.Google.ClientId;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using web.api.App.Common;
 using web.api.App.Recipes.Commands;
@@ -12,6 +13,7 @@ namespace web.api.App.Recipes
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class RecipeController
     {
         private readonly AppDbContext _context;
