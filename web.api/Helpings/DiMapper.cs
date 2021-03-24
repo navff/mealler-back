@@ -4,9 +4,10 @@ using System.IO;
 using System.Reflection;
 using Common.Config;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using web.api.App.Common;
 using web.api.App.Recipes;
@@ -37,15 +38,29 @@ namespace web.api.Helpings
 
             // AUTH
 
-            services.AddAuthentication(options =>
+            services.AddAuthentication(options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
+                .AddJwtBearer(options =>
                 {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                })
-                .AddCookie(options => { options.LoginPath = "/user/google-login"; })
-                .AddGoogle(options =>
-                {
-                    options.ClientId = authConfig.Google.ClientId;
-                    options.ClientSecret = authConfig.Google.ClientSecret;
+                    options.RequireHttpsMetadata = false; // TODO: enable in Prod
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // укзывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = true,
+                        // строка, представляющая издателя
+                        ValidIssuer = AuthOptions.ISSUER,
+
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = true,
+                        // установка потребителя токена
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        // будет ли валидироваться время существования
+                        ValidateLifetime = true,
+
+                        // установка ключа безопасности
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        // валидация ключа безопасности
+                        ValidateIssuerSigningKey = true
+                    };
                 });
 
             // Register DbContext

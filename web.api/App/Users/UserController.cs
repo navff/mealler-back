@@ -1,10 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using web.api.App.Common;
 
 namespace web.api.App.Users
 {
@@ -13,63 +14,78 @@ namespace web.api.App.Users
     [Route("user")]
     public class UserController : ControllerBase
     {
-        [HttpGet]
-        [Route("google-login")]
-        public IActionResult GoogleLogin()
+        [HttpPost("token")]
+        public IActionResult Token([FromBody] TokenRequest tokenRequest)
         {
-            var properties = new AuthenticationProperties
+            var token = CreateToken(tokenRequest.Email);
+            if (token == null) return BadRequest(new {errorText = "Invalid username"});
+
+            var response = new
             {
-                RedirectUri = Url.Action("GoogleResponse")
+                access_token = token,
+                username = tokenRequest.Email
             };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+
+            return Ok(response);
         }
 
-        [HttpPost]
-        [Route("google-response")]
-        public async Task<IActionResult> GoogleResponse()
+        [HttpGet("me")]
+        [Authorize]
+        public IActionResult GetUser()
         {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            var claims = result.Principal.Identities.FirstOrDefault()
-                .Claims.Select(claim => new
-                {
-                    claim.Issuer,
-                    claim.OriginalIssuer,
-                    claim.Type,
-                    claim.Value
-                });
-            return Ok(claims);
+            return Ok(User.Identity.Name);
         }
 
-        [HttpGet]
-        [Route("google-response")]
-        public async Task<IActionResult> GoogleResponseGET()
+        private string CreateToken(string username)
         {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            var claims = result.Principal.Identities.FirstOrDefault()
-                .Claims.Select(claim => new
-                {
-                    claim.Issuer,
-                    claim.OriginalIssuer,
-                    claim.Type,
-                    claim.Value
-                });
-            return Ok(claims);
+            var identity = GetIdentity(username);
+            if (identity == null)
+            {
+            }
+
+            var now = DateTime.UtcNow;
+            // создаем JWT-токен
+            var jwt = new JwtSecurityToken(
+                AuthOptions.ISSUER,
+                AuthOptions.AUDIENCE,
+                notBefore: now,
+                claims: identity.Claims,
+                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                    SecurityAlgorithms.HmacSha256));
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        [HttpPut]
-        [Route("google-response")]
-        public async Task<IActionResult> GoogleResponsePUT()
+        private ClaimsIdentity GetIdentity(string username)
         {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            var claims = result.Principal.Identities.FirstOrDefault()
-                .Claims.Select(claim => new
+            // TODO: получить реального пользователя
+            var user = new User
+            {
+                Email = "newUser@mail.com",
+                Name = "petya",
+                ActiveTeamId = 1
+            };
+
+            if (user != null)
+            {
+                var claims = new List<Claim>
                 {
-                    claim.Issuer,
-                    claim.OriginalIssuer,
-                    claim.Type,
-                    claim.Value
-                });
-            return Ok(claims);
+                    new(ClaimsIdentity.DefaultNameClaimType, user.Email)
+                    // new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role)
+                };
+                var claimsIdentity =
+                    new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                        ClaimsIdentity.DefaultRoleClaimType);
+                return claimsIdentity;
+            }
+
+            // если пользователя не найдено
+            return null;
         }
+    }
+
+    public class TokenRequest
+    {
+        public string Email { get; set; }
     }
 }

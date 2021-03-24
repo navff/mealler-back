@@ -14,7 +14,7 @@ namespace web.api.App.Recipes
     [ApiController]
     [Route("[controller]")]
     [Authorize]
-    public class RecipeController
+    public class RecipeController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly IMediator _mediator;
