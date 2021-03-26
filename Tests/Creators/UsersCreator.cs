@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using web.api.App.Users;
 using web.api.DataAccess;
@@ -15,7 +16,7 @@ namespace Tests.Creators
         {
             var user = new User
             {
-                Email = "user1@lololol-hohoho.com",
+                Email = Guid.NewGuid().ToString()[..9] + "mailmailmail.ru",
                 Name = "Lololol"
             };
 

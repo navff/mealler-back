@@ -7,12 +7,7 @@
 
     public class AuthConfig
     {
-        public GoogleAuthConfig Google { get; set; }
-    }
-
-    public class GoogleAuthConfig
-    {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
+        public string TestAdminToken { get; set; }
+        public string SecretJwtKey { get; set; }
     }
 }

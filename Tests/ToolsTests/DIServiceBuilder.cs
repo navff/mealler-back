@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using web.api.Helpings;
@@ -24,8 +25,12 @@ namespace Tests.ToolsTests
 
         private IHostBuilder CreateHostBuilder(string[] args)
         {
+            var builder = new ConfigurationBuilder()
+                .AddUserSecrets<BaseUnitTest>();
+
+            var config = builder.Build();
             return Host.CreateDefaultBuilder(args)
-                .ConfigureServices(services => { DiMapper.Map(services, null, true); });
+                .ConfigureServices(services => { DiMapper.Map(services, config); });
         }
     }
 }

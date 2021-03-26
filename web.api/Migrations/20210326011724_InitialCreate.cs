@@ -2,7 +2,7 @@
 
 namespace web.api.Migrations
 {
-    public partial class init : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,6 +25,7 @@ namespace web.api.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>("TEXT", nullable: true),
                     Email = table.Column<string>("TEXT", nullable: true),
+                    Role = table.Column<int>("INTEGER", nullable: false),
                     ActiveTeamId = table.Column<int>("INTEGER", nullable: true)
                 },
                 constraints: table => { table.PrimaryKey("PK_Users", x => x.Id); });

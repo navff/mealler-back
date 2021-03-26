@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using Common.Config;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using web.api.App.Common;
 using web.api.App.Recipes;
+using web.api.App.Users;
 using web.api.DataAccess;
 
 namespace web.api.Helpings
@@ -18,10 +18,9 @@ namespace web.api.Helpings
     [ExcludeFromCodeCoverage]
     public static class DiMapper
     {
-        public static void Map(IServiceCollection services, IConfiguration configuration, bool testing = false)
+        public static void Map(IServiceCollection services, IConfiguration configuration)
         {
             // CONFIGURATION
-            if (testing) configuration = ConfigHelper.GetIConfigurationRoot(Directory.GetCurrentDirectory());
             services.AddSingleton(configuration);
             var authConfig = configuration.GetSection("Auth").Get<AuthConfig>();
 
@@ -57,7 +56,7 @@ namespace web.api.Helpings
                         ValidateLifetime = true,
 
                         // установка ключа безопасности
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(authConfig.SecretJwtKey),
                         // валидация ключа безопасности
                         ValidateIssuerSigningKey = true
                     };
@@ -68,9 +67,11 @@ namespace web.api.Helpings
 
             // BUSINESS SERVICES
             services.AddTransient<RecipeService>();
+            services.AddTransient<UserService>();
 
             // CONTROLLERS
             services.AddTransient<RecipeController>();
+            services.AddTransient<UserController>();
         }
     }
 }

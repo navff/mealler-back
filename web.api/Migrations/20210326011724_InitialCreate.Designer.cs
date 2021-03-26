@@ -9,14 +9,14 @@ using web.api.DataAccess;
 namespace web.api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210316032641_init")]
-    partial class init
+    [Migration("20210326011724_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.4");
 
             modelBuilder.Entity("TeamUser", b =>
                 {
@@ -83,6 +83,9 @@ namespace web.api.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

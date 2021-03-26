@@ -12,7 +12,10 @@ namespace web.api
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .AddConfiguration(configuration)
+                .AddUserSecrets<Startup>();
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }

@@ -21,10 +21,7 @@ namespace web.api.App.Recipes.Commands
             var recipeModel = request.Adapt<Recipe>();
             var resultRecipe = await _recipeService.Add(recipeModel);
 
-            return new EntityCreatedResult
-            {
-                Id = resultRecipe.Id
-            };
+            return new EntityCreatedResult(resultRecipe.Id);
         }
     }
 }

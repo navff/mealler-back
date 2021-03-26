@@ -13,7 +13,7 @@ namespace web.api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.4");
 
             modelBuilder.Entity("TeamUser", b =>
             {
@@ -80,6 +80,9 @@ namespace web.api.Migrations
 
                 b.Property<string>("Name")
                     .HasColumnType("TEXT");
+
+                b.Property<int>("Role")
+                    .HasColumnType("INTEGER");
 
                 b.HasKey("Id");
 
