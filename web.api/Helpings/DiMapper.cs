@@ -2,6 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -61,6 +63,8 @@ namespace web.api.Helpings
                         ValidateIssuerSigningKey = true
                     };
                 });
+            // Hangfire
+            services.AddHangfire(c => { c.UseMemoryStorage(); });
 
             // Register DbContext
             AppDbContext.Register(services);

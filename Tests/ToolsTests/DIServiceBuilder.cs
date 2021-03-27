@@ -29,6 +29,7 @@ namespace Tests.ToolsTests
                 .AddUserSecrets<BaseUnitTest>();
 
             var config = builder.Build();
+
             return Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services => { DiMapper.Map(services, config); });
         }

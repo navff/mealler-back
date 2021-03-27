@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using web.api.App.Common;
+using web.api.App.Jobs;
 using web.api.Helpings;
 
 namespace web.api
@@ -37,6 +38,7 @@ namespace web.api
 
             if (env.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
@@ -53,6 +55,8 @@ namespace web.api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            HangfireConfigurationBuilder.Setup(app, Configuration);
         }
     }
 }

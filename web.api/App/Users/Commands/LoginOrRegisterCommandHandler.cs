@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using web.api.App.Common;
@@ -34,8 +35,8 @@ namespace web.api.App.Users.Commands
 
             if (existingUser != null)
             {
-                // TODO: send token to email
                 var token = Token.Create(existingUser, _configuration);
+                BackgroundJob.Enqueue<EmailSender>(x => x.Send(existingUser, token));
                 return new EntityCreatedResult(existingUser.Id);
             }
 
@@ -57,10 +58,8 @@ namespace web.api.App.Users.Commands
                 Email = email,
                 Role = Role.User
             });
-
             var token = Token.Create(newUser, _configuration);
-            // TODO: send token to email
-
+            BackgroundJob.Enqueue<EmailSender>(x => x.Send(newUser, token));
             return new EntityCreatedResult(newUser.Id);
         }
     }
