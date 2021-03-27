@@ -10,6 +10,7 @@ namespace Tests
 {
     public class BaseIntergationTest<T> : BaseUnitTest
     {
+        protected readonly IConfiguration _configuration;
         protected readonly T _controller;
         protected readonly HttpClient _httpClient;
         protected readonly string _testAdminToken;
@@ -22,8 +23,8 @@ namespace Tests
             _controller = diServiceBuilder.GetService<T>();
             var builder = new ConfigurationBuilder()
                 .AddUserSecrets<BaseUnitTest>();
-            var config = builder.Build();
-            _testAdminToken = config.GetSection("Auth").Get<AuthConfig>().TestAdminToken;
+            _configuration = builder.Build();
+            _testAdminToken = _configuration.GetSection("Auth").Get<AuthConfig>().TestAdminToken;
         }
     }
 }

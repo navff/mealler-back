@@ -37,7 +37,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="App\Users\Queries"/>
         <Folder Include="Migrations"/>
     </ItemGroup>
 

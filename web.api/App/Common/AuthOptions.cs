@@ -7,7 +7,7 @@ namespace web.api.App.Common
     {
         public const string ISSUER = "MeallerApiServer"; // издатель токена
         public const string AUDIENCE = "MeallerClient"; // потребитель токена
-        public const int LIFETIME = 100; // время жизни токена в минутах
+        public const int LIFETIME = 60 * 24 * 365; // время жизни токена в минутах
 
         public static SymmetricSecurityKey GetSymmetricSecurityKey(string secretKeyFromConfig)
         {

@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Common.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using web.api.App.Common;
 using web.api.App.Users.Commands;
+using web.api.App.Users.Queries;
 
 namespace web.api.App.Users
 {
@@ -26,10 +28,18 @@ namespace web.api.App.Users
 
         [HttpGet("me")]
         [Authorize]
-        public IActionResult GetUser()
+        public async Task<UserResponse> GetUser()
         {
             // ReSharper disable once PossibleNullReferenceException
-            return Ok(User.Identity.Name);
+            return await _mediator.Send(new GetUserQuery {Email = User.Identity.Name});
+        }
+
+        // Method for testing only
+        [HttpGet("error-for-test")]
+        [Authorize]
+        public UserResponse GetError()
+        {
+            throw new EntityNotFoundException<User>(123);
         }
     }
 }

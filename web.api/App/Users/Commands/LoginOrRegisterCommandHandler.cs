@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using web.api.App.Common;
 
 namespace web.api.App.Users.Commands
@@ -39,7 +35,7 @@ namespace web.api.App.Users.Commands
             if (existingUser != null)
             {
                 // TODO: send token to email
-                var token = CreateToken(existingUser);
+                var token = Token.Create(existingUser, _configuration);
                 return new EntityCreatedResult(existingUser.Id);
             }
 
@@ -58,43 +54,14 @@ namespace web.api.App.Users.Commands
         {
             var newUser = await _userService.Create(new User
             {
-                Email = email
+                Email = email,
+                Role = Role.User
             });
 
-            var token = CreateToken(newUser);
+            var token = Token.Create(newUser, _configuration);
             // TODO: send token to email
 
             return new EntityCreatedResult(newUser.Id);
-        }
-
-        private string CreateToken(User user)
-        {
-            var identity = GetIdentity(user);
-            var now = DateTime.UtcNow;
-            var authConfig = _configuration.GetSection("Auth").Get<AuthConfig>();
-            // создаем JWT-токен
-            var jwt = new JwtSecurityToken(
-                AuthOptions.ISSUER,
-                AuthOptions.AUDIENCE,
-                notBefore: now,
-                claims: identity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(authConfig.SecretJwtKey),
-                    SecurityAlgorithms.HmacSha256));
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
-        }
-
-        private ClaimsIdentity GetIdentity(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                new(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
-            };
-            var claimsIdentity =
-                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
-            return claimsIdentity;
         }
     }
 }
