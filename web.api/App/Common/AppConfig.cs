@@ -4,6 +4,7 @@
     {
         public AuthConfig Auth { get; set; }
         public EmailConfig Email { get; set; }
+        public FrontendConfig Frontend { get; set; }
     }
 
     public class AuthConfig
@@ -25,5 +26,10 @@
         public string DashboardPath { get; set; }
         public string AdminUsername { get; set; }
         public string AdminPassword { get; set; }
+    }
+
+    public class FrontendConfig
+    {
+        public string[] AllowedUrls { get; set; }
     }
 }
