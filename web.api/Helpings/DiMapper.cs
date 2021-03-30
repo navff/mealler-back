@@ -25,6 +25,7 @@ namespace web.api.Helpings
             // CONFIGURATION
             services.AddSingleton(configuration);
             var authConfig = configuration.GetSection("Auth").Get<AuthConfig>();
+            services.AddCors();
 
             // SERVICES
             services.AddSwaggerGen(c =>
