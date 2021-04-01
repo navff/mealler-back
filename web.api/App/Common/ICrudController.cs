@@ -3,12 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace web.api.App.Common
 {
-    public interface ICrudController<T_ViewModelPost, T_SearchParams>
+    public interface ICrudController<
+        T_GetEntityQuery,
+        T_AddEntityCommand,
+        T_EditEntityCommand,
+        T_DeleteEntityCommand,
+        T_SearchEntityQuery>
     {
-        Task<ObjectResult> Get(int id);
-        Task<ObjectResult> Post(T_ViewModelPost viewModel);
-        Task<ObjectResult> Put(int id, T_ViewModelPost viewModel);
-        Task<ObjectResult> Delete(int id);
-        Task<ObjectResult> Search(T_SearchParams searchParams);
+        Task<ObjectResult> Get(T_GetEntityQuery query);
+        Task<ObjectResult> Post(T_AddEntityCommand command);
+        Task<ObjectResult> Put(int id, T_EditEntityCommand command);
+        Task<ObjectResult> Delete(T_DeleteEntityCommand command);
+        Task<ObjectResult> Search(T_SearchEntityQuery searchParams);
     }
 }

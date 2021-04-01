@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using web.api.App.Common;
+using web.api.App.Events;
 using web.api.App.Recipes;
 using web.api.App.Users;
 using web.api.DataAccess;
@@ -73,6 +74,7 @@ namespace web.api.Helpings
             // BUSINESS SERVICES
             services.AddTransient<RecipeService>();
             services.AddTransient<UserService>();
+            services.AddTransient<EventService>();
 
             // CONTROLLERS
             services.AddTransient<RecipeController>();

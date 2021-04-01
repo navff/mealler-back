@@ -15,13 +15,13 @@ namespace Common.Exceptions
         }
     }
 
-    public class EntityNotFoundBaseException : Exception
+    public abstract class EntityNotFoundBaseException : Exception
     {
-        public EntityNotFoundBaseException(string? message) : base(message)
+        protected EntityNotFoundBaseException(string message = null) : base(message)
         {
         }
 
-        public EntityNotFoundBaseException(string? message, Exception? innerException) : base(message, innerException)
+        protected EntityNotFoundBaseException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

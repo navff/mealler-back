@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using web.api.App.Common;
 using web.api.App.Recipes.Commands;
-using web.api.DataAccess;
 
 namespace web.api.App.Recipes
 {
@@ -16,12 +14,10 @@ namespace web.api.App.Recipes
     [Authorize]
     public class RecipeController : ControllerBase
     {
-        private readonly AppDbContext _context;
         private readonly IMediator _mediator;
 
-        public RecipeController(AppDbContext context, IMediator mediator)
+        public RecipeController(IMediator mediator)
         {
-            _context = context;
             _mediator = mediator;
         }
 
@@ -36,7 +32,7 @@ namespace web.api.App.Recipes
         [HttpGet("all")]
         public IEnumerable<Recipe> GetAll()
         {
-            return _context.Recipes.OrderBy(r => r.Name).ToList();
+            throw new NotImplementedException();
         }
 
         [HttpPost]

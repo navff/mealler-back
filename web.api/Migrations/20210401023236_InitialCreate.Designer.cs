@@ -9,14 +9,14 @@ using web.api.DataAccess;
 namespace web.api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210326011724_InitialCreate")]
+    [Migration("20210401023236_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.4");
+                .HasAnnotation("ProductVersion", "6.0.0-preview.2.21154.2");
 
             modelBuilder.Entity("TeamUser", b =>
                 {
@@ -31,6 +31,28 @@ namespace web.api.Migrations
                     b.HasIndex("TeamsId");
 
                     b.ToTable("TeamUser");
+                });
+
+            modelBuilder.Entity("web.api.App.Events.Event", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("web.api.App.Recipes.Recipe", b =>
@@ -103,6 +125,15 @@ namespace web.api.Migrations
                     b.HasOne("web.api.App.Teams.Team", null)
                         .WithMany()
                         .HasForeignKey("TeamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("web.api.App.Events.Event", b =>
+                {
+                    b.HasOne("web.api.App.Teams.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

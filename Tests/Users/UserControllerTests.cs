@@ -16,7 +16,8 @@ namespace Tests.Users
         {
             var result = await _controller.LoginOrRegister(new LoginOrRegisterCommand
             {
-                Email = "jojojo@mail.com"
+                Email = "jojojo@mail.com",
+                Url = "localhost"
             });
             Assert.True(result.Id != 0);
         }

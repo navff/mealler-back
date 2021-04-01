@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
+using web.api.App.Events;
 using web.api.App.Recipes;
 using web.api.App.Teams;
 using web.api.App.Users;
@@ -25,6 +26,8 @@ namespace web.api.DataAccess
         public DbSet<Team> Teams { get; set; }
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Event> Events { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Team>()
@@ -35,6 +38,11 @@ namespace web.api.DataAccess
             modelBuilder.Entity<Team>()
                 .HasMany(p => p.Members)
                 .WithMany(p => p.Teams);
+
+            modelBuilder.Entity<Event>()
+                .HasOne<Team>()
+                .WithMany()
+                .HasForeignKey(z => z.TeamId);
         }
 
         private bool HasUnappliedMigrations()

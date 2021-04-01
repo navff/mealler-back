@@ -14,12 +14,14 @@ namespace Tests.Creators
             UsersCreator = new UsersCreator(_context);
             TeamsCreator = new TeamsCreator(_context);
             RecipesCreator = new RecipesCreator(_context);
+            EventsCreator = new EventsCreator(_context);
         }
 
         public UsersCreator UsersCreator { get; }
         public TeamsCreator TeamsCreator { get; }
 
         public RecipesCreator RecipesCreator { get; }
+        public EventsCreator EventsCreator { get; }
 
         public AppDbContext GetContext()
         {
