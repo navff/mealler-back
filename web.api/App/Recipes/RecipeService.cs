@@ -33,7 +33,7 @@ namespace web.api.App.Recipes
             throw new NotImplementedException();
         }
 
-        public override Task<Recipe> Update(Recipe entity)
+        public override Task<Recipe> Update(Recipe evt)
         {
             throw new NotImplementedException();
         }
@@ -44,6 +44,11 @@ namespace web.api.App.Recipes
         }
 
         public override Task<PageView<Recipe>> Search(RecipeSearchParams searchParams)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task CheckRights(int id, string username)
         {
             throw new NotImplementedException();
         }

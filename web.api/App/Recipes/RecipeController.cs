@@ -12,13 +12,10 @@ namespace web.api.App.Recipes
     [ApiController]
     [Route("[controller]")]
     [Authorize]
-    public class RecipeController : ControllerBase
+    public class RecipeController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public RecipeController(IMediator mediator)
+        public RecipeController(IMediator mediator) : base(mediator)
         {
-            _mediator = mediator;
         }
 
         [HttpGet("{id:int}")]

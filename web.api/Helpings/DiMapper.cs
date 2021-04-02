@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using web.api.App.Common;
 using web.api.App.Events;
 using web.api.App.Recipes;
+using web.api.App.Teams;
 using web.api.App.Users;
 using web.api.DataAccess;
 
@@ -75,10 +76,12 @@ namespace web.api.Helpings
             services.AddTransient<RecipeService>();
             services.AddTransient<UserService>();
             services.AddTransient<EventService>();
+            services.AddTransient<TeamService>();
 
             // CONTROLLERS
             services.AddTransient<RecipeController>();
             services.AddTransient<UserController>();
+            services.AddTransient<EventController>();
         }
     }
 }

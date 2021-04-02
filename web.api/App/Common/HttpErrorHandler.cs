@@ -17,40 +17,30 @@ namespace web.api.App.Common
 
             if (exception is EntityNotFoundBaseException) code = HttpStatusCode.NotFound;
             else if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
-            else if (exception is ForbiddenAccessException) code = HttpStatusCode.Forbidden;
+            else if (exception is ForbiddenAccessBaseException) code = HttpStatusCode.Forbidden;
             else if (exception is ArgumentException) code = HttpStatusCode.BadRequest;
 
             context.Response.StatusCode = (int) code;
-            var err = new ErrorResponse(exception);
-            await context.Response.WriteAsJsonAsync(err);
+            await context.Response.WriteAsJsonAsync(new
+            {
+                ErrorType = GetTypeName(exception),
+                Message = exception.Message,
+                StackTrace = exception.StackTrace,
+            });
         }
 
-        private class ErrorResponse
+        private static string GetTypeName(Exception exception)
         {
-            public ErrorResponse(Exception ex)
+            var type = exception.GetType();
+            var result = type.Name;
+
+            if (type.IsGenericType)
             {
-                Type = GetTypeName(ex);
-                Message = ex.Message;
-                StackTrace = ex.ToString();
+                var g = type.GetGenericTypeDefinition();
+                result = g.Name.Remove(g.Name.IndexOf('`')) + "<" + type.GetGenericArguments()[0].Name + ">";
             }
 
-            private string Type { get; }
-            private string Message { get; }
-            private string StackTrace { get; }
-
-            private string GetTypeName(Exception exception)
-            {
-                var type = exception.GetType();
-                var result = type.Name;
-
-                if (type.IsGenericType)
-                {
-                    var g = type.GetGenericTypeDefinition();
-                    result = g.Name.Remove(g.Name.IndexOf('`')) + "<" + type.GetGenericArguments()[0].Name + ">";
-                }
-
-                return result;
-            }
+            return result;
         }
     }
 }

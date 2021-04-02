@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using web.api.App.Recipes;
 using web.api.App.Teams;
 using web.api.App.Users;
@@ -19,6 +20,7 @@ namespace web.api.DataAccess
         {
             // Recipes
             // AddRecipes();
+            AddUsers();
         }
 
         private void AddUsers()
@@ -43,27 +45,42 @@ namespace web.api.DataAccess
 
             var vova = new User
             {
-                Name = "Vova (Team admin and member",
-                Email = "Var@33kita.ru"
+                Name = "vova (Team admin and member)",
+                Email = "var@33kita.ru"
             };
+            _context.Users.Add(petya);
+            _context.Users.Add(vasya);
+            _context.Users.Add(tanya);
+            _context.Users.Add(vova);
+            _context.SaveChanges();
 
             // Teams
+
             var petyaTeam = new Team
             {
                 Name = "PetyaTeam",
                 Owner = petya,
-                Members = {tanya, vasya, vova}
+                Members = new List<User> {tanya, vasya, vova},
+                OwnerUserId = petya.Id
             };
 
             var vovaTeam = new Team
             {
                 Name = "VovaTeam",
                 Owner = vova,
-                Members = {tanya, vasya}
+                Members = new List<User> {tanya, vasya},
+                OwnerUserId = vova.Id
             };
 
             _context.Teams.Add(petyaTeam);
             _context.Teams.Add(vovaTeam);
+            _context.SaveChanges();
+
+            petya.ActiveTeamId = petyaTeam.Id;
+            vasya.ActiveTeamId = petyaTeam.Id;
+            vova.ActiveTeamId = vovaTeam.Id;
+            tanya.ActiveTeamId = vovaTeam.Id;
+            _context.SaveChanges();
         }
 
         private void AddRecipes()

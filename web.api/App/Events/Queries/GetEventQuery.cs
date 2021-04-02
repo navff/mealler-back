@@ -1,6 +1,8 @@
-﻿namespace web.api.App.Events.Queries
+﻿using MediatR;
+
+namespace web.api.App.Events.Queries
 {
-    public class GetEventQuery
+    public class GetEventQuery : IRequest<EventResponse>
     {
         public int Id { get; set; }
     }

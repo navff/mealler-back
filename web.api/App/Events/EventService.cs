@@ -6,6 +6,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using web.api.App.Common;
 using web.api.App.Events.Queries;
+using web.api.App.Users;
 using web.api.DataAccess;
 
 namespace web.api.App.Events
@@ -34,15 +35,15 @@ namespace web.api.App.Events
             return entity;
         }
 
-        public override async Task<Event> Update(Event entity)
+        public override async Task<Event> Update(Event evt)
         {
-            var oldEntity = await _context.Events.FirstOrDefaultAsync(e => e.Id == entity.Id);
+            var oldEntity = await _context.Events.FirstOrDefaultAsync(e => e.Id == evt.Id);
             if (oldEntity == null)
             {
-                throw new EntityNotFoundException<Event>(entity.Id);
+                throw new EntityNotFoundException<Event>(evt.Id);
             }
 
-            oldEntity = entity.Adapt(oldEntity);
+            oldEntity = evt.Adapt(oldEntity, MapsterConfig.Ignore("TeamId"));
             await _context.SaveChangesAsync();
             return oldEntity;
         }
@@ -51,6 +52,7 @@ namespace web.api.App.Events
         {
             var evt = await Get(id);
             _context.Events.Remove(evt);
+            await _context.SaveChangesAsync();
         }
 
         public override Task<PageView<Event>> Search(EventSearchQuery searchParams)
@@ -71,7 +73,27 @@ namespace web.api.App.Events
                 query = query.Where(e => e.Date < searchParams.ToDate);
             }
 
-            return PageView<Event>.GetNewInstance(query);
+            return PageView<Event>.GetNewInstance(query, searchParams.Page);
+        }
+
+        public override async Task CheckRights(int id, string username)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == username.ToLower());
+            if (user == null)
+            {
+                throw new EntityNotFoundException<User>(username);
+            }
+
+            // to check if NotFound
+            await Get(id);
+
+            var userTeams = _context.Teams.Where(t =>
+                (t.OwnerUserId == user.Id) ||
+                (t.Members.Contains(user)));
+            if (!userTeams.Any())
+            {
+                throw new ForbiddenAccessException<Event>(id);
+            }
         }
     }
 }

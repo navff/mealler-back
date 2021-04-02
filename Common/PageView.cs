@@ -8,21 +8,21 @@ namespace Common
 {
     public class PageView<T>
     {
-        private PageView()
+        public PageView()
         {
         }
 
-        public List<T> Items { get; private set; }
-        public int PagesCount { get; private set; }
-        public int ItemsCount { get; private set; }
+        public List<T> Items { get; set; }
+        public int PagesCount { get; set; }
+        public int ItemsCount { get; set; }
         public int Page { get; set; }
         public bool HasPreviousPage => Page > 1;
         public bool HasNextPage => Page < PagesCount;
 
-        public static async Task<PageView<T>> GetNewInstance(IQueryable<T> query)
+        public static async Task<PageView<T>> GetNewInstance(IQueryable<T> query, int page = 1)
         {
             var pageView = new PageView<T>();
-
+            pageView.Page = page;
             pageView.ItemsCount = query.Count();
             pageView.PagesCount = (int) Math.Ceiling(query.Count() * 1.0 / HARDCODED_SETTINGS.ITEMS_PER_PAGE);
             pageView.Items = await query
