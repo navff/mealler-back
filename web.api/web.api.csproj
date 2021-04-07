@@ -40,6 +40,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="App\Ingredients\ReferenceIngredients\Commands"/>
         <Folder Include="Migrations"/>
     </ItemGroup>
 

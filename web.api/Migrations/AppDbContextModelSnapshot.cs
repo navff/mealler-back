@@ -18,17 +18,49 @@ namespace web.api.Migrations
 
             modelBuilder.Entity("TeamUser", b =>
             {
-                b.Property<int>("MembersId")
+                b.Property<int>("UserId")
                     .HasColumnType("INTEGER");
 
-                b.Property<int>("TeamsId")
+                b.Property<int>("TeamId")
                     .HasColumnType("INTEGER");
 
-                b.HasKey("MembersId", "TeamsId");
+                b.HasKey("UserId", "TeamId");
 
-                b.HasIndex("TeamsId");
+                b.HasIndex("TeamId");
 
                 b.ToTable("TeamUser");
+
+                b.HasData(
+                    new
+                    {
+                        UserId = 1,
+                        TeamId = 1
+                    },
+                    new
+                    {
+                        UserId = 1,
+                        TeamId = 2
+                    },
+                    new
+                    {
+                        UserId = 2,
+                        TeamId = 1
+                    },
+                    new
+                    {
+                        UserId = 3,
+                        TeamId = 2
+                    },
+                    new
+                    {
+                        UserId = 3,
+                        TeamId = 3
+                    },
+                    new
+                    {
+                        UserId = 4,
+                        TeamId = 3
+                    });
             });
 
             modelBuilder.Entity("web.api.App.Events.Event", b =>
@@ -37,7 +69,7 @@ namespace web.api.Migrations
                     .ValueGeneratedOnAdd()
                     .HasColumnType("INTEGER");
 
-                b.Property<DateTimeOffset>("Date")
+                b.Property<DateTime>("Date")
                     .HasColumnType("TEXT");
 
                 b.Property<string>("Name")
@@ -51,6 +83,59 @@ namespace web.api.Migrations
                 b.HasIndex("TeamId");
 
                 b.ToTable("Events");
+            });
+
+            modelBuilder.Entity("web.api.App.Ingredients.RecipeIngredients.RecipeIngredient", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER");
+
+                b.Property<double>("Amount")
+                    .HasColumnType("REAL");
+
+                b.Property<int>("RecipeId")
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("Unit")
+                    .HasColumnType("INTEGER");
+
+                b.HasKey("Id");
+
+                b.HasIndex("RecipeId");
+
+                b.ToTable("RecipeIngredient");
+            });
+
+            modelBuilder.Entity("web.api.App.Ingredients.ReferenceIngredients.ReferenceIngredient", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("Name")
+                    .HasColumnType("TEXT");
+
+                b.Property<decimal>("PackAmount")
+                    .HasColumnType("TEXT");
+
+                b.Property<decimal>("PackPrice")
+                    .HasColumnType("TEXT");
+
+                b.Property<double>("Price")
+                    .HasColumnType("REAL");
+
+                b.Property<int>("TeamId")
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("Unit")
+                    .HasColumnType("INTEGER");
+
+                b.HasKey("Id");
+
+                b.HasIndex("TeamId");
+
+                b.ToTable("ReferenceIngredients");
             });
 
             modelBuilder.Entity("web.api.App.Recipes.Recipe", b =>
@@ -86,7 +171,27 @@ namespace web.api.Migrations
 
                 b.HasIndex("OwnerUserId");
 
-                b.ToTable("Teams");
+                b.ToTable("Team");
+
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        Name = "Team1",
+                        OwnerUserId = 1
+                    },
+                    new
+                    {
+                        Id = 2,
+                        Name = "Team2",
+                        OwnerUserId = 2
+                    },
+                    new
+                    {
+                        Id = 3,
+                        Name = "Team3",
+                        OwnerUserId = 4
+                    });
             });
 
             modelBuilder.Entity("web.api.App.Users.User", b =>
@@ -109,25 +214,79 @@ namespace web.api.Migrations
 
                 b.HasKey("Id");
 
-                b.ToTable("Users");
+                b.ToTable("User");
+
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        ActiveTeamId = 1,
+                        Email = "petya@petya-team.com",
+                        Name = "Petya (Team Admin)",
+                        Role = 0
+                    },
+                    new
+                    {
+                        Id = 2,
+                        ActiveTeamId = 1,
+                        Email = "masya@petya-team.com",
+                        Name = "Vasya (Team member)",
+                        Role = 0
+                    },
+                    new
+                    {
+                        Id = 3,
+                        ActiveTeamId = 2,
+                        Email = "tanya@petya-team.com",
+                        Name = "Tanya (Team member)",
+                        Role = 0
+                    },
+                    new
+                    {
+                        Id = 4,
+                        ActiveTeamId = 3,
+                        Email = "var@33kita.ru",
+                        Name = "vova (Team admin and member)",
+                        Role = 0
+                    });
             });
 
             modelBuilder.Entity("TeamUser", b =>
             {
-                b.HasOne("web.api.App.Users.User", null)
+                b.HasOne("web.api.App.Teams.Team", null)
                     .WithMany()
-                    .HasForeignKey("MembersId")
+                    .HasForeignKey("TeamId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("web.api.App.Teams.Team", null)
+                b.HasOne("web.api.App.Users.User", null)
                     .WithMany()
-                    .HasForeignKey("TeamsId")
+                    .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
 
             modelBuilder.Entity("web.api.App.Events.Event", b =>
+            {
+                b.HasOne("web.api.App.Teams.Team", null)
+                    .WithMany()
+                    .HasForeignKey("TeamId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("web.api.App.Ingredients.RecipeIngredients.RecipeIngredient", b =>
+            {
+                b.HasOne("web.api.App.Recipes.Recipe", "Recipe")
+                    .WithMany("Ingredients")
+                    .HasForeignKey("RecipeId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("Recipe");
+            });
+
+            modelBuilder.Entity("web.api.App.Ingredients.ReferenceIngredients.ReferenceIngredient", b =>
             {
                 b.HasOne("web.api.App.Teams.Team", null)
                     .WithMany()
@@ -146,6 +305,8 @@ namespace web.api.Migrations
 
                 b.Navigation("Owner");
             });
+
+            modelBuilder.Entity("web.api.App.Recipes.Recipe", b => { b.Navigation("Ingredients"); });
 #pragma warning restore 612, 618
         }
     }

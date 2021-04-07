@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using web.api.App.Events;
+using web.api.App.Ingredients.ReferenceIngredients;
 using web.api.App.Recipes;
 using web.api.App.Teams;
 using web.api.App.Users;
+using web.api.DataAccess.Configurations;
 
 namespace web.api.DataAccess
 {
@@ -28,18 +30,19 @@ namespace web.api.DataAccess
 
         public DbSet<Event> Events { get; set; }
 
+        public DbSet<ReferenceIngredient> ReferenceIngredients { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Team>()
-                .HasOne(p => p.Owner)
-                .WithMany()
-                .HasForeignKey(z => z.OwnerUserId);
-
-            modelBuilder.Entity<Team>()
-                .HasMany(p => p.Members)
-                .WithMany(p => p.Teams);
+            modelBuilder.ApplyConfiguration(new UserDbConfiguration());
+            modelBuilder.ApplyConfiguration(new TeamDbConfiguration());
 
             modelBuilder.Entity<Event>()
+                .HasOne<Team>()
+                .WithMany()
+                .HasForeignKey(z => z.TeamId);
+
+            modelBuilder.Entity<ReferenceIngredient>()
                 .HasOne<Team>()
                 .WithMany()
                 .HasForeignKey(z => z.TeamId);
@@ -67,9 +70,6 @@ namespace web.api.DataAccess
 
             var context = services.BuildServiceProvider()
                 .GetService<AppDbContext>();
-
-            var seeder = new Seeder(context);
-            seeder.Seed();
         }
     }
 }

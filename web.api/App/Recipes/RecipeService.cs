@@ -47,10 +47,5 @@ namespace web.api.App.Recipes
         {
             throw new NotImplementedException();
         }
-
-        public override Task CheckRights(int id, string username)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

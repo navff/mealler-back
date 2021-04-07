@@ -15,6 +15,7 @@ namespace Tests.Creators
             TeamsCreator = new TeamsCreator(_context);
             RecipesCreator = new RecipesCreator(_context);
             EventsCreator = new EventsCreator(_context);
+            ReferenceIngredientCreator = new ReferenceIngredientCreator(_context);
         }
 
         public UsersCreator UsersCreator { get; }
@@ -22,6 +23,8 @@ namespace Tests.Creators
 
         public RecipesCreator RecipesCreator { get; }
         public EventsCreator EventsCreator { get; }
+
+        public ReferenceIngredientCreator ReferenceIngredientCreator { get; }
 
         public AppDbContext GetContext()
         {

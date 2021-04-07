@@ -62,10 +62,5 @@ namespace web.api.App.Users
 
             return await PageView<User>.GetNewInstance(query);
         }
-
-        public override Task CheckRights(int id, string username)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

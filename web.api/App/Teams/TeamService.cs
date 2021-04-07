@@ -70,10 +70,5 @@ namespace web.api.App.Teams
         {
             throw new System.NotImplementedException();
         }
-
-        public override Task CheckRights(int id, string username)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

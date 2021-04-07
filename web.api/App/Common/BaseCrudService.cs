@@ -1,5 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Common;
+using Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using web.api.App.Events;
+using web.api.App.Users;
 using web.api.DataAccess;
 
 namespace web.api.App.Common
@@ -18,6 +23,25 @@ namespace web.api.App.Common
         public abstract Task<T> Update(T evt);
         public abstract Task Delete(int id);
         public abstract Task<PageView<T_SearchResult>> Search(T_SearchParams searchParams);
-        public abstract Task CheckRights(int id, string username);
+
+        public async Task CheckRights(int id, string username)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == username.ToLower());
+            if (user == null)
+            {
+                throw new EntityNotFoundException<User>(username);
+            }
+
+            // to check if NotFound
+            await Get(id);
+
+            var userTeams = _context.Teams.Where(t =>
+                (t.OwnerUserId == user.Id) ||
+                (t.Members.Contains(user)));
+            if (!userTeams.Any())
+            {
+                throw new ForbiddenAccessException<Event>(id);
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using web.api.App.Common;
 using web.api.App.Events;
+using web.api.App.Ingredients.ReferenceIngredients;
 using web.api.App.Recipes;
 using web.api.App.Teams;
 using web.api.App.Users;
@@ -77,11 +78,13 @@ namespace web.api.Helpings
             services.AddTransient<UserService>();
             services.AddTransient<EventService>();
             services.AddTransient<TeamService>();
+            services.AddTransient<ReferenceIngredientService>();
 
             // CONTROLLERS
             services.AddTransient<RecipeController>();
             services.AddTransient<UserController>();
             services.AddTransient<EventController>();
+            services.AddTransient<ReferenceIngredientController>();
         }
     }
 }
