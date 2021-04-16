@@ -17,6 +17,7 @@ namespace web.api.App.Common
 
             if (exception is EntityNotFoundBaseException) code = HttpStatusCode.NotFound;
             else if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
+            else if (exception is NoAuthenticationException) code = HttpStatusCode.Unauthorized;
             else if (exception is ForbiddenAccessBaseException) code = HttpStatusCode.Forbidden;
             else if (exception is ArgumentException) code = HttpStatusCode.BadRequest;
 

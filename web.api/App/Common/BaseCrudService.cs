@@ -4,7 +4,6 @@ using Common;
 using Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using web.api.App.Events;
-using web.api.App.Users;
 using web.api.DataAccess;
 
 namespace web.api.App.Common
@@ -26,10 +25,15 @@ namespace web.api.App.Common
 
         public async Task CheckRights(int id, string username)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new NoAuthenticationException($"You are not authenticated.");
+            }
+
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == username.ToLower());
             if (user == null)
             {
-                throw new EntityNotFoundException<User>(username);
+                throw new NoAuthenticationException($"You are not authenticated. Username={username}");
             }
 
             // to check if NotFound
@@ -38,7 +42,7 @@ namespace web.api.App.Common
             var userTeams = _context.Teams.Where(t =>
                 (t.OwnerUserId == user.Id) ||
                 (t.Members.Contains(user)));
-            if (!userTeams.Any())
+            if (userTeams == null || !userTeams.Any())
             {
                 throw new ForbiddenAccessException<Event>(id);
             }
