@@ -2,6 +2,7 @@
 using Common;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using web.api.App.Common;
 using web.api.App.Ingredients.ReferenceIngredients.Commands;
@@ -32,6 +33,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients
         }
 
         [HttpPost()]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(EntityCreatedResult), 200)]
         public async Task<ObjectResult> Post([FromBody] AddReferenceIngredientRequest request)
         {
@@ -41,6 +43,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients
             return Ok(result);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(EntityCreatedResult), 200)]
         public async Task<ObjectResult> Put(int id, [FromBody] EditReferenceIngredientRequest request)
@@ -51,6 +54,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients
             return Ok(result);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id:int}")]
         public async Task<ObjectResult> Delete(DeleteReferenceIngredientRequest request)
         {
