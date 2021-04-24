@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace web.api.Migrations
@@ -11,10 +12,11 @@ namespace web.api.Migrations
                 name: "Recipes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table => { table.PrimaryKey("PK_Recipes", x => x.Id); });
 
@@ -22,12 +24,13 @@ namespace web.api.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    Role = table.Column<int>(type: "INTEGER", nullable: false),
-                    ActiveTeamId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    Role = table.Column<string>(type: "text", nullable: true),
+                    ActiveTeamId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table => { table.PrimaryKey("PK_User", x => x.Id); });
 
@@ -35,11 +38,12 @@ namespace web.api.Migrations
                 name: "RecipeIngredient",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RecipeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Amount = table.Column<double>(type: "REAL", nullable: false),
-                    Unit = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
+                    RecipeId = table.Column<int>(type: "integer", nullable: false),
+                    Amount = table.Column<double>(type: "double precision", nullable: false),
+                    Unit = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,10 +60,11 @@ namespace web.api.Migrations
                 name: "Team",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    OwnerUserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    OwnerUserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,11 +81,12 @@ namespace web.api.Migrations
                 name: "Events",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    TeamId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
+                    TeamId = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,14 +103,15 @@ namespace web.api.Migrations
                 name: "ReferenceIngredients",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<double>(type: "REAL", nullable: false),
-                    Unit = table.Column<int>(type: "INTEGER", nullable: false),
-                    PackPrice = table.Column<decimal>(type: "TEXT", nullable: false),
-                    PackAmount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    TeamId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Price = table.Column<double>(type: "double precision", nullable: false),
+                    Unit = table.Column<int>(type: "integer", nullable: false),
+                    PackPrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    PackAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    TeamId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,8 +128,8 @@ namespace web.api.Migrations
                 name: "TeamUser",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TeamId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    TeamId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,67 +151,36 @@ namespace web.api.Migrations
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] {"Id", "ActiveTeamId", "Email", "Name", "Role"},
-                values: new object[] {1, 1, "petya@petya-team.com", "Petya (Team Admin)", 0});
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] {"Id", "ActiveTeamId", "Email", "Name", "Role"},
-                values: new object[] {2, 1, "masya@petya-team.com", "Vasya (Team member)", 0});
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] {"Id", "ActiveTeamId", "Email", "Name", "Role"},
-                values: new object[] {3, 2, "tanya@petya-team.com", "Tanya (Team member)", 0});
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] {"Id", "ActiveTeamId", "Email", "Name", "Role"},
-                values: new object[] {4, 3, "var@33kita.ru", "vova (Team admin and member)", 0});
+                values: new object[,]
+                {
+                    {1, 1, "petya@petya-team.com", "Petya (Team Admin)", null},
+                    {2, 1, "masya@petya-team.com", "Vasya (Team member)", null},
+                    {3, 2, "tanya@petya-team.com", "Tanya (Team member)", null},
+                    {4, 3, "var@33kita.ru", "vova (Team admin and member!)", "Admin"}
+                });
 
             migrationBuilder.InsertData(
                 table: "Team",
                 columns: new[] {"Id", "Name", "OwnerUserId"},
-                values: new object[] {1, "Team1", 1});
-
-            migrationBuilder.InsertData(
-                table: "Team",
-                columns: new[] {"Id", "Name", "OwnerUserId"},
-                values: new object[] {2, "Team2", 2});
-
-            migrationBuilder.InsertData(
-                table: "Team",
-                columns: new[] {"Id", "Name", "OwnerUserId"},
-                values: new object[] {3, "Team3", 4});
+                values: new object[,]
+                {
+                    {1, "Team1", 1},
+                    {2, "Team2", 2},
+                    {3, "Team3", 4}
+                });
 
             migrationBuilder.InsertData(
                 table: "TeamUser",
                 columns: new[] {"TeamId", "UserId"},
-                values: new object[] {1, 1});
-
-            migrationBuilder.InsertData(
-                table: "TeamUser",
-                columns: new[] {"TeamId", "UserId"},
-                values: new object[] {1, 2});
-
-            migrationBuilder.InsertData(
-                table: "TeamUser",
-                columns: new[] {"TeamId", "UserId"},
-                values: new object[] {2, 1});
-
-            migrationBuilder.InsertData(
-                table: "TeamUser",
-                columns: new[] {"TeamId", "UserId"},
-                values: new object[] {2, 3});
-
-            migrationBuilder.InsertData(
-                table: "TeamUser",
-                columns: new[] {"TeamId", "UserId"},
-                values: new object[] {3, 3});
-
-            migrationBuilder.InsertData(
-                table: "TeamUser",
-                columns: new[] {"TeamId", "UserId"},
-                values: new object[] {3, 4});
+                values: new object[,]
+                {
+                    {1, 1},
+                    {1, 2},
+                    {2, 1},
+                    {2, 3},
+                    {3, 3},
+                    {3, 4}
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_TeamId",

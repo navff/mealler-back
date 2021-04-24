@@ -36,9 +36,10 @@ namespace web.api.DataAccess.Configurations
                 new User
                 {
                     Id = 4,
-                    Name = "vova (Team admin and member)",
+                    Name = "vova (Team admin and member!)",
                     Email = "var@33kita.ru",
-                    ActiveTeamId = 3
+                    ActiveTeamId = 3,
+                    Role = "Admin"
                 }
             );
         }

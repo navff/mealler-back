@@ -33,7 +33,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients
         }
 
         [HttpPost()]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(EntityCreatedResult), 200)]
         public async Task<ObjectResult> Post([FromBody] AddReferenceIngredientRequest request)
         {
@@ -43,7 +43,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients
             return Ok(result);
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(EntityCreatedResult), 200)]
         public async Task<ObjectResult> Put(int id, [FromBody] EditReferenceIngredientRequest request)
@@ -54,7 +54,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients
             return Ok(result);
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<ObjectResult> Delete(DeleteReferenceIngredientRequest request)
         {

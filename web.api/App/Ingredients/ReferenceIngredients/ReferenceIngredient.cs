@@ -1,12 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using web.api.App.Common;
 
 namespace web.api.App.Ingredients.ReferenceIngredients
 {
     public class ReferenceIngredient
     {
-        [Key] public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         public string Name { get; set; }
 

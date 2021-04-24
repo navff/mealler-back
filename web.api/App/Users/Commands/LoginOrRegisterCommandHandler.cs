@@ -58,7 +58,7 @@ namespace web.api.App.Users.Commands
             var newUser = await _userService.Create(new User
             {
                 Email = email,
-                Role = Role.User
+                Role = Roles.User
             });
             var token = Token.Create(newUser, _configuration);
             BackgroundJob.Enqueue<EmailSender>(x => x.Send(newUser, token, frontendUrl));

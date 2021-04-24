@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,10 @@ namespace web.api.DataAccess
         {
             lock (Locker)
             {
-                Database.Migrate();
+                if (Database.GetPendingMigrations().Any())
+                {
+                    Database.Migrate();
+                }
             }
         }
 
@@ -34,6 +38,8 @@ namespace web.api.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.UseSerialColumns();
+            modelBuilder.UseIdentityAlwaysColumns();
             modelBuilder.ApplyConfiguration(new UserDbConfiguration());
             modelBuilder.ApplyConfiguration(new TeamDbConfiguration());
 
@@ -65,10 +71,10 @@ namespace web.api.DataAccess
         public static void Register(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(opt =>
-                    opt.UseSqlite(SqliteConfigBuilder.GetConnection()),
+                    opt.UseNpgsql("Server=localhost;Database=MeallerDevelop;User Id=postgres;Password=P@ssword1"),
                 ServiceLifetime.Transient);
 
-            var context = services.BuildServiceProvider()
+            services.BuildServiceProvider()
                 .GetService<AppDbContext>();
         }
     }
