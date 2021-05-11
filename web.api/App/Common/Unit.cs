@@ -2,9 +2,9 @@
 {
     public enum Unit
     {
-        Kg = 1,
-        Gr = 2,
-        L = 3,
-        Items = 4,
+        kg = 1,
+        gr = 2,
+        l = 3,
+        items = 4,
     }
 }

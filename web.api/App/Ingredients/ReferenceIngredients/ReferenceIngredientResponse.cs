@@ -1,5 +1,4 @@
 ﻿using System;
-using web.api.App.Common;
 
 namespace web.api.App.Ingredients.ReferenceIngredients
 {
@@ -11,7 +10,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients
 
         public double Price { get; set; }
 
-        public Unit Unit { get; set; }
+        public string Unit { get; set; }
 
         public Decimal PackPrice { get; set; }
 
