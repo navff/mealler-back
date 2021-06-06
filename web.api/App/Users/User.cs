@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using web.api.App.Teams;
 
 namespace web.api.App.Users
@@ -12,6 +14,15 @@ namespace web.api.App.Users
 
         public int? ActiveTeamId { get; set; }
         public ICollection<Team> Teams { get; set; }
+
+        public int GetTeamId()
+        {
+            return ActiveTeamId.HasValue
+                ? ActiveTeamId.Value
+                : Teams.FirstOrDefault() != null
+                    ? Teams.First().Id
+                    : throw new InvalidOperationException($"User `{this.Email}` must have at least one team");
+        }
     }
 
     public static class Roles
