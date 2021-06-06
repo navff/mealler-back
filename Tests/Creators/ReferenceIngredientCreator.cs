@@ -22,7 +22,7 @@ namespace Tests.Creators
             {
                 Name = $"Ingredient_{Guid.NewGuid().ToString()[..5]}",
                 Price = 12,
-                Unit = Unit.Gr,
+                Unit = Unit.gr,
                 PackAmount = 800,
                 PackPrice = 76,
                 TeamId = (await _teamsCreator.CreateOne()).Id

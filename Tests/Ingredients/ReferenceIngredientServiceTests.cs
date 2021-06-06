@@ -36,7 +36,7 @@ namespace Tests.Ingredients
             {
                 Name = $"Ingredient_{Guid.NewGuid().ToString()[..5]}",
                 Price = 11,
-                Unit = Unit.Items,
+                Unit = Unit.items,
                 PackAmount = 1,
                 PackPrice = 135,
                 TeamId = (await _creator.TeamsCreator.CreateOne()).Id
@@ -54,7 +54,7 @@ namespace Tests.Ingredients
             {
                 Name = Guid.NewGuid().ToString(),
                 Price = 123,
-                Unit = Unit.Items,
+                Unit = Unit.items,
                 PackAmount = 123,
                 PackPrice = 123,
                 TeamId = 9999999 // <-- This is wrong!
@@ -85,7 +85,7 @@ namespace Tests.Ingredients
             {
                 Name = "ingredient_" + Guid.NewGuid().ToString()[..5],
                 Price = 123,
-                Unit = Unit.Kg,
+                Unit = Unit.kg,
                 PackAmount = 123,
                 PackPrice = 123,
                 TeamId = ingredient.TeamId,
