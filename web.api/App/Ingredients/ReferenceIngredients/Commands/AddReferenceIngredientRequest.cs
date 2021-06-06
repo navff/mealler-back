@@ -1,7 +1,6 @@
 ﻿using System;
 using MediatR;
 using web.api.App.Common;
-using Unit = web.api.App.Common.Unit;
 
 namespace web.api.App.Ingredients.ReferenceIngredients.Commands
 {
@@ -11,7 +10,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients.Commands
 
         public double Price { get; set; }
 
-        public Unit Unit { get; set; }
+        public string Unit { get; set; }
 
         public Decimal PackPrice { get; set; }
 

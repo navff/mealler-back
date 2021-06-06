@@ -50,6 +50,7 @@ namespace web.api.App.Ingredients.ReferenceIngredients
         {
             var command = request.Adapt<EditReferenceIngredientCommand>();
             command.Id = id;
+            command.Username = Request.HttpContext.User?.Identity?.Name;
             var result = await _mediator.Send(command);
             return Ok(result);
         }

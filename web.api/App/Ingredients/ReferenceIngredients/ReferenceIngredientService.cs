@@ -37,11 +37,11 @@ namespace web.api.App.Ingredients.ReferenceIngredients
 
         public override async Task<ReferenceIngredient> Update(ReferenceIngredient ingredient)
         {
-            var oldEntity = await Get(ingredient.Id);
+            var dbEntity = await Get(ingredient.Id);
 
-            oldEntity = ingredient.Adapt(oldEntity);
+            ingredient.Adapt(dbEntity);
             await _context.SaveChangesAsync();
-            return oldEntity;
+            return dbEntity;
         }
 
         public override async Task Delete(int id)
